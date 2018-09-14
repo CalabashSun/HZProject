@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="gbk"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name = "viewport" content = "initial-scale = 1, user-scalable = no">
+		<link rel="stylesheet" type="text/css" href="http://221.226.25.42:7677/js/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="http://221.226.25.42:7677/js/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="http://221.226.25.42:7677/js/demo.css">
+		<script type="text/javascript" src="http://221.226.25.42:7677/js/jquery-2.2.4.js" ></script>
+		<script type="text/javascript" src="http://221.226.25.42:7677/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="http://221.226.25.42:7677/js/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="http://221.226.25.42:7575/web/include/js/newregx/encodeToGb2312.js"></script>
+		<script type="text/javascript" src="http://221.226.25.42:7575/web/include/js/newregx/common.js?v=0.2"></script>
+    <title>员工绩效开台</title>
+</head>
+<body>
+    <script>
+        var CQ_SQL_Table = "View_T_IT_KTS_01"; //查询的表名或视图名称
+        var CQ_SQL_field = "pp,md,nian,yue,kts";//查询表或视图的字段名称
+        var CQ_SQL_Primary = "newids";//主键
+        var CQ_DB = "IT_MIS";//数据库
+        var rows = "50";//默认查询条数
+        
+        var CQ_SQL_vague = "usid";//查询字段名称_0
+        var search_Name = GetUrlParam("uid")==""?"10":GetUrlParam("uid");//查询内容_0
+    
+        var CQ_SQL_vague_1 = "";//查询字段名称_1
+        var search_Name_1 = "";//查询内容_1
+        
+        var CQ_SQL_vague_2 = "";//查询字段名称_2
+        var search_Name_2 = "";//查询内容_2
+        
+        var CQ_SQL_vague_3 = "";//查询字段名称_3
+        var search_Name_3 = "";//查询内容_3
+        
+        var CQ_SQL_vague_4 = "";//查询字段名称_4
+        var search_Name_4 = "";//查询内容_4
+        
+        var CQ_SQL_time_vague=""//查询时间字段名称_0
+        var search_time_fh=""//查询时间名< = > <= >=_0
+        var CQ_time_Name=""//查询时间字段内容_0
+        
+        var CQ_SQL_time_vague_1=""//查询时间字段名称_1
+        var search_time_fh_1=""//查询时间名< = > <= >=_1
+        var CQ_time_Name_1=""//查询时间字段内容_1
+        
+        //下载csv所需的字段  下载时搜索条件至少要有一个 否则会下载不了
+        var CQ_SQL_ZH="品牌,门店,年,月,开台数";//与field对应得中文 **,**,**,
+        var CQ_SQL_Table_zh="免单数据";//csv文件得名字前缀 
+
+        
+
+var Select_CQ_Admin=CreateUrl(1);
+</script>
+
+<div id="tb" style="padding:3px">
+    <a href="javascript: $('#dlg').dialog('open').dialog('setTitle','搜索');" class="easyui-linkbutton" iconCls="icon-search" >搜索</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-print" id="download">下载</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-print" id="updateBtn" >修改</a>
+</div>	
+
+<div id="dlg" name='dlg' class="easyui-dialog" style="padding:20px;width:300px;height:210px;top:200px"
+title="数据查询" iconCls="icon-ok" toolbar="#dlg-toolbar" buttons="#dlg-buttons" data-options="closed:true">
+<form>
+    <span>品牌名称:</span>
+    <!--需要修改的地方 修改value值为查询的字段-->
+    <input name="CQ_SQL_vague_1" id="CQ_SQL_vague_1" class="easyui-validatebox" value="pp" type="hidden">
+    <input name="search_Name_1" id="search_Name_1" class="easyui-validatebox"  style="line-height:26px;border:1px solid #ccc">  
+    </br>
+    <span>门店:</span>
+    <!--需要修改的地方 修改value值为查询的字段-->
+    <input name="CQ_SQL_vague_2" id="CQ_SQL_vague_2" class="easyui-validatebox" value="md" type="hidden"> 
+    <input name="search_Name_2" id="search_Name_2" class="easyui-validatebox"  style="line-height:26px;border:1px solid #ccc">  
+    </br>
+    <!--如果页面有传递参数那么对应的vague/name 的数值要递增 -->
+    
+    <span>开台数:</span>
+    <input name="CQ_SQL_vague_3" id="CQ_SQL_vague_3" class="easyui-validatebox" value="yuefen" type="hidden"> 
+    <input type="text" id="datetime1" name="search_Name_3"> 
+    </br>
+   	
+    <!-- 
+    <span>***:</span>
+    <input name="CQ_SQL_vague_4" id="CQ_SQL_vague_4" class="easyui-validatebox" value="" type="hidden"> 
+    <input name="search_Name_4" id="search_Name_4" class="easyui-validatebox"   style="line-height:26px;border:1px solid #ccc"> 	
+    </br>
+    -->
+    
+    <!-- <span>时间:</span>
+    <select id="search_time_fh"  class="easyui-combobox" style="width:60px;" panelHeight=100>
+        <option value='='>=</option>
+        <option value='<='><=</option>
+        <option value='>='>>=</option>
+    </select>
+    <input type="hidden" id="CQ_SQL_time_vague" name="CQ_SQL_time_vague_1" value="***">
+    <input id="CQ_time_Name" class="easyui-datebox" style="width:110px">
+    </br> -->
+
+
+    <a href="javascript:CQ_search()" style="margin-top: 10px" class="easyui-linkbutton"   iconCls="icon-search" >搜索</a>
+</form>	
+</div>	
+<div id="downloadDialog" style="padding:20px;width:300px;height:180px;top:200px" class="easyui-dialog" closed="true"></div>
+<table class="easyui-datagrid"  id="dg" name="dg" title="名单列表"  fit="true"  style="height:auto;"  toolbar="#tb" pagination="true" rownumbers="true" fitColumns="false"  iconCls="icon-save" singleSelect="false" checkbox="true"
+data-options="singleSelect:true,deferLoading:true
+,rownumbers:true,async:false,pagination:true
+,method:'post'
+,url:Select_CQ_Admin,fitColumns:true,collapsible:true,loadMsg: '正在努力为您加载数据'"  >	
+		<thead>
+			<!--field:'**'的值要从搜索数据的字段里获得-->
+			<tr>
+                    <th data-options="field:'pp'" sortable="true" nowrap="false">品牌</th> 
+                    <th data-options="field:'md'" sortable="true" nowrap="false">门店</th> 
+                    <th data-options="field:'nian'" sortable="true" nowrap="false">年</th> 
+                    <th data-options="field:'yue'" sortable="true" nowrap="false">月</th> 
+                    <th data-options="field:'kts'" sortable="true" nowrap="false">开台数</th> 
+			</tr>
+		</thead>
+</table>
+
+
+<script>
+    $(function() {      
+          $('#datetime1').datebox({    
+            formatter: function (d) {
+                   return d.getFullYear() + '-' + (("0" + (d.getMonth() + 1)).slice(-2));
+               }})
+    });
+</script>
+</body>
+</html>
